@@ -14,27 +14,27 @@ pipeline {
 
         stage('maven build') {
             steps {
-                sh "mvn clean compile"
+                bat "mvn clean compile"
             }
         }
 
         stage('docker image creation') {
             steps {
-                sh "docker build -t $DOCKER_IMAGE:${BUILD_NUMBER} ."
+                bat "docker build -t $DOCKER_IMAGE:${BUILD_NUMBER} ."
             }
         }
 
         stage('docker login') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
+                    bat "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
                 }
             }
         }
 
         stage('docker push') {
             steps {
-                sh "docker push $DOCKER_IMAGE:${BUILD_NUMBER}"
+                bat "docker push $DOCKER_IMAGE:${BUILD_NUMBER}"
             }
         }
 
@@ -43,8 +43,8 @@ pipeline {
                 script {
                     def containerExists = sh(script: "docker ps -aq -f name=$CONTAINER_NAME", returnStdout: true).trim()
                     if (containerExists) {
-                        sh "docker stop $CONTAINER_NAME"
-                        sh "docker rm $CONTAINER_NAME"
+                        bat "docker stop $CONTAINER_NAME"
+                        bat "docker rm $CONTAINER_NAME"
                     } else {
                         echo "No existing container with $CONTAINER_NAME"
                     }
@@ -52,12 +52,12 @@ pipeline {
                     def oldImageID = sh(script: "docker images -q $DOCKER_IMAGE | tail -n+2", returnStdout: true).trim()
                     if (oldImageID) {
                         echo "Removing old image: $oldImageID"
-                        sh "docker rmi -f $oldImageID || true"
+                        bat "docker rmi -f $oldImageID || true"
                     } else {
                         echo "No old images found."
                     }
 
-                    sh "docker run -d --name $CONTAINER_NAME -p 8080:8080 $DOCKER_IMAGE:${BUILD_NUMBER}"
+                    bat "docker run -d --name $CONTAINER_NAME -p 8080:8080 $DOCKER_IMAGE:${BUILD_NUMBER}"
                 }
             }
         }
