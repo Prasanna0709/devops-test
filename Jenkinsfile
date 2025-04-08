@@ -57,3 +57,4 @@ pipeline{
        sh 'docker run -d --name ${CONTAINER_NAME} -p 8080:8080 ${DOCKER_IMAGE}:${BUILD_NUMBER}'
     }
  }
+}
