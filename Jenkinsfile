@@ -42,7 +42,7 @@ pipeline {
             steps {
                 script {
                     def containerExists = bat(script: "docker ps -aq -f name=${CONTAINER_NAME}", returnStdout: true).trim()
-                    if (containerExists) {
+                    if (containerExists?.trim()) {
                         bat "docker stop ${CONTAINER_NAME}"
                         bat "docker rm ${CONTAINER_NAME}"
                     } else {
@@ -50,7 +50,7 @@ pipeline {
                     }
 
                     def oldImageID = bat(script: "docker images -q prasanna0218/${DOCKER_IMAGE} | more +1", returnStdout: true).trim()
-                    if (oldImageID) {
+                    if (oldImageID?.trim()) {
                         echo "Removing old image: ${oldImageID}"
                         bat "docker rmi -f ${oldImageID}"
                     } else {
