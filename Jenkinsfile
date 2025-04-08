@@ -34,7 +34,7 @@ pipeline {
 
         stage('docker push') {
             steps {
-                bat "docker push prasanna0218/myfirstrepo:${BUILD_NUMBER}"
+                bat "docker push prasanna0218/$DOCKER_IMAGE:${BUILD_NUMBER}"
             }
         }
 
