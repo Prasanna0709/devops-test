@@ -50,13 +50,10 @@ pipeline {
                     }
 
                     def oldImageIDs = bat(script: "docker images prasanna0218/${DOCKER_IMAGE} -q | more +1", returnStdout: true).trim()
-
                     if (oldImageIDs) {
                         oldImageIDs.split().each { imageID ->
                             bat "docker rmi -f ${imageID}"
                         }
-                    } else {
-                        echo "No old images to remove."
                     }
 
                     bat "docker run -d --name ${CONTAINER_NAME} -p 8080:8080 prasanna0218/${DOCKER_IMAGE}:${BUILD_NUMBER}"
