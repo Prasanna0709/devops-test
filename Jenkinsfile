@@ -1,5 +1,6 @@
 pipeline {
     agent any
+
     environment {
         DOCKER_IMAGE = "mydevops"
         CONTAINER_NAME = "mydevopscontainer"
@@ -41,12 +42,11 @@ pipeline {
         stage('docker deploy') {
             steps {
                 script {
-                    def containerExists = bat(script: "docker ps -aq -f name=${CONTAINER_NAME}", returnStdout: true).trim()
-                    if (containerExists && containerExists?.trim().length() > 0) {
+                    try {
                         bat "docker stop ${CONTAINER_NAME}"
                         bat "docker rm ${CONTAINER_NAME}"
-                    } else {
-                        echo "No existing container with ${CONTAINER_NAME}"
+                    } catch (Exception e) {
+                        echo "Container not running or doesn't exist. Skipping stop/remove."
                     }
 
                     def oldImageID = bat(script: "docker images -q prasanna0218/${DOCKER_IMAGE} | more +1", returnStdout: true).trim()
