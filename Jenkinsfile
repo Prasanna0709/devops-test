@@ -42,7 +42,7 @@ pipeline {
             steps {
                 script {
                     def containerExists = bat(script: "docker ps -aq -f name=${CONTAINER_NAME}", returnStdout: true).trim()
-                    if (containerExists?.trim()) {
+                    if (containerExists && containerExists?.trim().length() > 0) {
                         bat "docker stop ${CONTAINER_NAME}"
                         bat "docker rm ${CONTAINER_NAME}"
                     } else {
