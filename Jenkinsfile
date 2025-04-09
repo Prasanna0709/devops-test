@@ -49,13 +49,6 @@ pipeline {
                         echo "Container not running or doesn't exist. Skipping stop/remove."
                     }
 
-                    def oldImageIDs = bat(script: "docker images prasanna0218/${DOCKER_IMAGE} -q | more +1", returnStdout: true).trim()
-                    if (oldImageIDs) {
-                        oldImageIDs.split().each { imageID ->
-                            bat "docker rmi -f ${imageID}"
-                        }
-                    }
-
                     bat "docker run -d --name ${CONTAINER_NAME} -p 8080:8080 prasanna0218/${DOCKER_IMAGE}:${BUILD_NUMBER}"
                 }
             }
