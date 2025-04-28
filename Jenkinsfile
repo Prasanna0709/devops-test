@@ -54,4 +54,21 @@ pipeline {
             }
         }
     }
+
+    post {
+        success {
+            emailext (
+                subject : "Build Success So Please kindly check it !",
+                body:'''<html>
+                                <body>
+                                    <p>Build Status : Success for ${JOB_NAME} for build ${currentBuild.number}</p>
+                               </body>
+                             </html> ''',
+               to:"prasannap0218@gmail.com",
+               from:"devjenkins0218@gmail.com",
+               replyTo: "devjenkins0218@gmail.com",
+               mimeType:"text/html"
+            )
+        }
+    }
 }
