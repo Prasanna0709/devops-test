@@ -59,11 +59,11 @@ pipeline {
         success {
             emailext (
                 subject : "Build Success So Please kindly check it !",
-                body:'''<html>
+                body:"""<html>
                                 <body>
                                     <p>Build Status : Success for ${JOB_NAME} for build ${currentBuild.number}</p>
                                </body>
-                             </html> ''',
+                             </html> """,
                to:"prasannap0218@gmail.com",
                from:"devjenkins0218@gmail.com",
                replyTo: "devjenkins0218@gmail.com",
